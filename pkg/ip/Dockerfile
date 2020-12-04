@@ -1,6 +1,5 @@
 FROM linuxkit/alpine:e2391e0b164c57db9f6c4ae110ee84f766edc430 AS mirror
 RUN mkdir -p /out/etc/apk && cp -r /etc/apk/* /out/etc/apk/
-RUN apk add curl
 RUN apk add --no-cache --initdb -p /out \
     alpine-baselayout \
     bash \
@@ -13,8 +12,8 @@ RUN apk add --no-cache --initdb -p /out \
     musl \
     wireguard-tools
 
-# We grab our version of wg-quick, called lk-wg-config.sh
-RUN curl -sSL -o /out/usr/bin/lk-wg-config https://gist.githubusercontent.com/zx2c4/3624de869ab7eaef3de5ea8f2b867be9/raw/de72b018f4f4548858ce6aae2898b34db0474221/lk-wg-config.sh && chmod 755 /out/usr/bin/lk-wg-config
+COPY lk-wg-config.sh /out/usr/bin/lk-wg-config
+RUN chmod 755 /out/usr/bin/lk-wg-config
 
 # Remove apk residuals
 RUN rm -rf /out/etc/apk /out/lib/apk /out/var/cache
